@@ -57,7 +57,15 @@ export class Database {
     const rowIndex = this.#database[table].findIndex(row => row.id === id)
 
     if (rowIndex > -1) {
-      this.#database[table][rowIndex] = { id, ...data }
+      let row = this.#database[table][rowIndex]
+
+      console.log(data)
+      
+      this.#database[table][rowIndex] = {
+        ...row,
+        ...Object.fromEntries(Object.entries(data))
+      }
+
       this.#persist()
     }
   }

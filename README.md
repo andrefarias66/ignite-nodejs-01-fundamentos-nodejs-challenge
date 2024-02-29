@@ -23,3 +23,9 @@
   ```	bash
   npm run dev
   ```
+
+## instalar os pacotes do csv-parse
+
+  ```bash 
+  npm install csv-parse -d
+  ```

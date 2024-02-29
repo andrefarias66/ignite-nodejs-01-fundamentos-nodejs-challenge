@@ -24,6 +24,8 @@ export class Database {
     if (search) {
       data = data.filter(row => {
         return Object.entries(search).some(([key, value]) => {
+          if (!value) return true
+          
           return row[key].toLowerCase().includes(value.toLowerCase())
         })
       })
@@ -59,12 +61,7 @@ export class Database {
     if (rowIndex > -1) {
       let row = this.#database[table][rowIndex]
 
-      console.log(data)
-      
-      this.#database[table][rowIndex] = {
-        ...row,
-        ...Object.fromEntries(Object.entries(data))
-      }
+      this.#database[table][rowIndex] = { id, ...row, ...data }
 
       this.#persist()
     }

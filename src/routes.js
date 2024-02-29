@@ -46,6 +46,12 @@ export const routes = [
     handler: (req, res) => {
       const { id } = req.params
 
+      const [task] = database.select('tasks', { id })
+
+      if (!task) {
+        return res.writeHead(404).end()
+      }
+
       database.delete('tasks', id)
 
       return res.writeHead(204).end()
@@ -58,10 +64,16 @@ export const routes = [
       const { id } = req.params
       const { title, description } = req.body
 
+      const [task] = database.select('tasks', { id })
+
+      if (!task) {
+        return res.writeHead(404).end()
+      }
+
       const user = {
         id,
-        title,
-        description,
+        title: title ?? task.title,
+        description: description ?? task.description,
         updated_at: new Date()
       }
 
@@ -76,9 +88,16 @@ export const routes = [
     handler: (req, res) => {
       const { id } = req.params
 
-      database.update('tasks', id, {
-        completed_at: new Date()
-      })
+      const [task] = database.select('tasks', { id })
+
+      if (!task) {
+        return res.writeHead(404).end()
+      }
+
+      const isTaskCompleted = !!task.completed_at
+      const completed_at = isTaskCompleted ? null : new Date()
+
+      database.update('tasks', id, { completed_at })
 
       return res.writeHead(204).end()
     }
